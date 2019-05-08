@@ -2,8 +2,8 @@
 //  ShoppingListViewController.swift
 //  InAppComm
 //
-//  Created by Gabriel Theodoropoulos.
-//  Copyright © 2019 Appcoda. All rights reserved.
+//  Created by Frank Bara.
+//  Copyright © 2019 BaraLabs. All rights reserved.
 //
 
 import UIKit
@@ -64,6 +64,8 @@ class ShoppingListViewController: UIViewController {
         if let identifier = segue.identifier {
             if identifier == "idShowEditItemViewControllerSegue" {
                 if let editItemVC = segue.destination as? EditItemViewController {
+                    
+                    editItemVC.delegate = self
                     
                     if let index = selectedItemIndex {
                         editItemVC.editedItem = shoppingList.items[index]
@@ -143,6 +145,23 @@ extension ShoppingListViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 68.0
+    }
+}
+
+// MARK: - EditItemViewControllerDelegate
+extension ShoppingListViewController: EditItemViewControllerDelegate {
+    
+    func isItemPresent(item: String) -> Bool {
+        if let _ = shoppingList.items.firstIndex(of: item) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func shouldAdd(item: String) {
+        shoppingList.items.append(item)
+        tableView.reloadData()
     }
 }
 

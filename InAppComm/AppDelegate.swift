@@ -2,8 +2,8 @@
 //  AppDelegate.swift
 //  InAppComm
 //
-//  Created by Gabriel Theodoropoulos.
-//  Copyright © 2019 Appcoda. All rights reserved.
+//  Created by Frank Bara.
+//  Copyright © 2019 BaraLabs. All rights reserved.
 //
 
 import UIKit

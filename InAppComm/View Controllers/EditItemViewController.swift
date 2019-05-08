@@ -2,8 +2,8 @@
 //  EditItemViewController.swift
 //  InAppComm
 //
-//  Created by Gabriel Theodoropoulos.
-//  Copyright © 2019 Appcoda. All rights reserved.
+//  Created by Frank Bara.
+//  Copyright © 2019 BaraLabs. All rights reserved.
 //
 
 import UIKit
@@ -22,7 +22,7 @@ class EditItemViewController: UIViewController {
     // MARK: - Properties
     
     var editedItem: String?
-    
+    var delegate: EditItemViewControllerDelegate!
     
     
     // MARK: - View Init Methods
@@ -75,6 +75,24 @@ class EditItemViewController: UIViewController {
     
     @IBAction func saveItem(_ sender: Any) {
         
+        guard let text = textField.text else { return }
+        
+        if text != "" {
+            if let delegate = delegate {
+                if !delegate.isItemPresent(item: text) {
+                    //item doesn't exist in the list already, add it now
+                    delegate.shouldAdd(item: text)
+                    navigationController?.popViewController(animated: true)
+                } else {
+                    //item already exists in the list, show alert
+                    let alert = UIAlertController(title: "Item exists", message: "\(text) already exists in the shopping list.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                    present(alert, animated: true, completion: nil)
+                }
+            }
+            
+            
+        }
     }
     
     
@@ -82,9 +100,14 @@ class EditItemViewController: UIViewController {
         
     }
     
+    
 }
 
-
+// MARK: - Protocol Method
+protocol EditItemViewControllerDelegate {
+    func shouldAdd(item: String)
+    func isItemPresent(item: String) -> Bool
+}
 
 
 // MARK: - UITextFieldDelegate
