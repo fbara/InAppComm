@@ -3,7 +3,7 @@
 //  InAppComm
 //
 //  Created by Frank Bara.
-//  Copyright © 2019 BaraLabs. All rights reserved.
+//  Copyright ©2019 BaraLabs. All rights reserved.
 //
 
 import UIKit
@@ -31,8 +31,8 @@ class AllListsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleDidCreateShoppingList(notification:)), name: .didCreateShoppingList, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleDidUpdateShoppingList(notification:)), name: .didUpdateShoppingList, object: nil)
     }
     
 
@@ -117,6 +117,26 @@ class AllListsViewController: UIViewController {
             // Add action handlers here!
             
             
+        }
+    }
+    
+    // MARK: - ObjC Handlers
+    @objc func handleDidCreateShoppingList(notification: Notification) {
+        /* Make sure that the object property of the notification has an actual value. Always do that check and never use the object property directly if you want to be safe and away from app crashes.
+         */
+        if let items = notification.object as? [String] {
+            let newShoppingList = ShoppingList(id: listManager.getNextListID(), name: "Shopping List", editTimestamp: Date.timeIntervalSinceReferenceDate, items: items)
+            listManager.add(list: newShoppingList)
+            tableView.reloadData()
+        }
+    }
+    
+    @objc func handleDidUpdateShoppingList(notification: NSNotification) {
+        if let userInfo = notification.userInfo {
+            if let id = userInfo["id"] as? Int, let items = userInfo["items"] as? [String] {
+                listManager.updateItems(inListWithID: id, items: items)
+                tableView.reloadData()
+            }
         }
     }
     

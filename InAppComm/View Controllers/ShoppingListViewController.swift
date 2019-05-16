@@ -3,7 +3,7 @@
 //  InAppComm
 //
 //  Created by Frank Bara.
-//  Copyright © 2019 BaraLabs. All rights reserved.
+//  Copyright ©2019 BaraLabs. All rights reserved.
 //
 
 import UIKit
@@ -95,7 +95,16 @@ class ShoppingListViewController: UIViewController {
     
     
     func updateParent() {
-        
+        //called every time the 'back' button is tapped
+        if let id = shoppingList.id {
+            // if the shopping list has an id value, then that means that we are updating it and we are posting a brand new notification
+            NotificationCenter.default.post(name: .didUpdateShoppingList, object: nil, userInfo: ["id": id, "items": shoppingList.items])
+        } else {
+            // shopping list was just created
+            if shoppingList.items.count > 0 {
+                NotificationCenter.default.post(name: .didCreateShoppingList, object: shoppingList.items, userInfo: nil)
+            }
+        }
     }
     
     
