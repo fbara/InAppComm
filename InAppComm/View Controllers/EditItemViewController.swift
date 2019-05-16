@@ -81,7 +81,11 @@ class EditItemViewController: UIViewController {
             if let delegate = delegate {
                 if !delegate.isItemPresent(item: text) {
                     //item doesn't exist in the list already, add it now
-                    delegate.shouldAdd(item: text)
+                    if let editedItem = editedItem {
+                        delegate.shouldReplace(item: editedItem, withItem: text)
+                    } else {
+                        delegate.shouldAdd(item: text)
+                    }
                     navigationController?.popViewController(animated: true)
                 } else {
                     //item already exists in the list, show alert
@@ -97,7 +101,12 @@ class EditItemViewController: UIViewController {
     
     
     @IBAction func deleteItem(_ sender: Any) {
+        guard let text = textField.text else { return }
         
+        if let delegate = delegate {
+            delegate.shouldRemove(item: text)
+            navigationController?.popViewController(animated: true)
+        }
     }
     
     
@@ -107,6 +116,8 @@ class EditItemViewController: UIViewController {
 protocol EditItemViewControllerDelegate {
     func shouldAdd(item: String)
     func isItemPresent(item: String) -> Bool
+    func shouldRemove(item: String)
+    func shouldReplace(item: String, withItem newItem: String)
 }
 
 

@@ -163,5 +163,19 @@ extension ShoppingListViewController: EditItemViewControllerDelegate {
         shoppingList.items.append(item)
         tableView.reloadData()
     }
+    
+    func shouldRemove(item: String) {
+        if let index = shoppingList.items.firstIndex(of: item) {
+            shoppingList.items.remove(at: index)
+            tableView.reloadData()
+        }
+    }
+    
+    func shouldReplace(item: String, withItem newItem: String) {
+        if let index = shoppingList.items.firstIndex(of: item) {
+            shoppingList.items[index] = newItem
+            tableView.reloadData()
+        }
+    }
 }
 
